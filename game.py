@@ -1,12 +1,16 @@
 import pygame
 import os
 import sys
+from levels import *
 
 
-def main():
+def main():     # основной цикл программы
     pygame.init()
-    size = width, height = 800, 400
+    size = WIDTH, HEIGHT    # константы из модуля levels, там их значения можно поменять
     screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('Platformer')
+
+    levels = []     # список со всеми уровнями
 
     running = True
     while running:

@@ -21,7 +21,7 @@ def main():     # основной цикл программы
                 running = False
 
     #    current_level.update()
-        current_level.draw(screen)
+    #    current_level.draw(screen)
         pygame.display.flip()
     pygame.quit()
 

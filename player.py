@@ -8,7 +8,7 @@ from images import get_images
 class Player(pygame.sprite.Sprite):
     """Class of the player that user controls"""
 
-    def __init__(self, level, *groups):
+    def __init__(self, *groups):
         super().__init__(*groups)
 
         # direction that player is facing
@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_x = 0
         self.speed_y = 0
 
-        self.level = level
+        self.level = None
         self.lives = 3
 
     def update(self):
@@ -47,9 +47,10 @@ class Player(pygame.sprite.Sprite):
 
         sprites = pygame.sprite.spritecollide(self, self.level.platforms, False)
         if not sprites:
-            self.speed_y -= 30
+            self.speed_y -= 0
         else:
-            self.rect.bottom = sprites[0].rect.top
+            # self.rect.bottom = sprites[0].rect.top
+            pass
 
         # if the player hits the enemies he lose one live
         if pygame.sprite.spritecollide(self, self.level.enemies, False):
@@ -89,5 +90,5 @@ class Player(pygame.sprite.Sprite):
         try:
             self.image = self.current_animation[(self.current_animation.index(self.image) + 1) %
                                                 len(self.current_animation)]
-        except IndexError:
+        except ValueError:
             self.image = self.current_animation[0]

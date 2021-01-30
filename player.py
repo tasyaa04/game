@@ -53,9 +53,10 @@ class Player(pygame.sprite.Sprite):
             self.speed_y += 20
         else:
             self.in_fall = False
-            if not self.in_fall and not self.in_air and self.rect.bottom >= sprites[0].rect.top:
+            if not self.in_fall and not self.in_air and self.rect.bottom <= sprites[0].rect.top + 50:
                 self.rect.bottom = sprites[0].rect.top + 20
             else:
+                self.in_fall = True
                 self.speed_y += 20
 
         # if the player hits the enemies he lose one live

@@ -27,10 +27,6 @@ class MovingPlatform(Platform):
 
         super().__init__(image_name, format_name, *groups)
 
-        # x and y speed
-        self.x_speed = 0
-        self.y_speed = 0
-
         # borders of moving
         self.border_left = 0
         self.border_right = 0
@@ -40,6 +36,10 @@ class MovingPlatform(Platform):
         # setting the player staying on platform and level
         self.player = None
         self.level = None
+
+        # x and y speed
+        self.x_speed = 0
+        self.y_speed = 0
 
     def set_speed(self, speed_of_x, speed_of_y):
         """Function sets speed of moving platform"""
@@ -64,8 +64,10 @@ class MovingPlatform(Platform):
         # Checking if the player on platform
         if pygame.sprite.collide_rect(self, self.player):
             # Move player with speed of platform
-            self.player.rect.x += self.x_speed
-            self.player.rect.y += self.y_speed
+            print(self.player.rect.bottom, self.rect.top)
+            if self.player.rect.bottom <= self.rect.top + 30:
+                self.player.rect.x += self.x_speed
+                self.player.rect.y += self.y_speed
 
         # Check the borders of moving and see if we need to change direction of moving platform
         if self.rect.bottom > self.border_bottom or self.rect.top < self.border_top:

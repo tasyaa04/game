@@ -6,7 +6,7 @@ from player import *
 WIDTH, HEIGHT = 1920, 1080  # размер экрана можно поменять
 
 
-class Level():
+class Level:
     def __init__(self, player):
         self.platforms = pygame.sprite.Group()  # создаем группу для платформ
         self.enemies = pygame.sprite.Group()  # и врагов
@@ -17,6 +17,9 @@ class Level():
         self.scroll_limit = 0
         self.possible_left_shift = self.player.rect.x
         self.possible_right_shift = self.scroll_limit
+
+        self.allow_left = False
+        self.allow_right = True
 
     def draw(self, screen):  # отрисовка уровня
         background = pygame.transform.scale(self.background[0], (WIDTH, HEIGHT))
@@ -29,18 +32,15 @@ class Level():
         self.enemies.update()
 
     def scroll(self, shift):
-        if shift > 0:
-            if shift <= self.possible_right_shift:
-                self.shift += shift
-                self.possible_right_shift -= shift
-            else:
-                self.shift -= self.possible_right_shift
-        elif shift < 0:
-            if shift >= self.possible_left_shift:
-                self.shift += shift
-                self.possible_left_shift -= shift
-            else:
-                self.shift -= self.possible_left_shift
+        self.shift += shift
+        self.allow_left = True if self.shift < self.possible_left_shift else False
+        self.allow_right = True if abs(self.shift) < self.possible_right_shift else False
+        for platform in self.platforms:
+            platform.rect.x += shift
+            if platform.__class__.__name__ == 'MovingPlatform':
+                borders = platform.border_left, platform.border_right, platform.border_bottom, \
+                          platform.border_top
+                platform.set_borders(*[x + shift for x in borders])
 
 
 class Level1(Level):  # это незаконченный первый уровень
@@ -66,7 +66,7 @@ class Level1(Level):  # это незаконченный первый уров�
                  ['Grass', '.png', 800, 335],
                  ]  # создаем список платформ ex: [image_name, format_name, x, y]
 
-        self.scroll_limit = 256
+        self.possible_right_shift = 500
 
         for i in level:
             platform = Platform(i[0], i[1])
@@ -74,9 +74,9 @@ class Level1(Level):  # это незаконченный первый уров�
             self.platforms.add(platform)
 
         platform = MovingPlatform('Grass', '.png')
-        platform.set_speed(1, 1)
+        platform.set_speed(10, 10)
         platform.rect.x, platform.rect.y = 960, 470
-        platform.set_borders(900, 960, 470, 598)
+        platform.set_borders(900, 1800, 470, 598)
         platform.level = self
         platform.player = self.player
         self.platforms.add(platform)

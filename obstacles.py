@@ -64,7 +64,6 @@ class MovingPlatform(Platform):
         # Checking if the player on platform
         if pygame.sprite.collide_rect(self, self.player):
             # Move player with speed of platform
-            print(self.player.rect.bottom, self.rect.top)
             if self.player.rect.bottom <= self.rect.top + 30:
                 self.player.rect.x += self.x_speed
                 self.player.rect.y += self.y_speed

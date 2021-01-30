@@ -3,14 +3,13 @@ from images import *
 from obstacles import *
 from player import *
 
-
-WIDTH, HEIGHT = 1280, 750   # размер экрана можно поменять
+WIDTH, HEIGHT = 1920, 1080  # размер экрана можно поменять
 
 
 class Level():
     def __init__(self, player):
         self.platforms = pygame.sprite.Group()  # создаем группу для платформ
-        self.enemies = pygame.sprite.Group()    # и врагов
+        self.enemies = pygame.sprite.Group()  # и врагов
         self.background = get_images('Background', '.png')
 
         self.shift = 0
@@ -19,12 +18,12 @@ class Level():
         self.possible_left_shift = self.player.rect.x
         self.possible_right_shift = self.scroll_limit
 
-    def draw(self, screen):    # отрисовка уровня
+    def draw(self, screen):  # отрисовка уровня
         background = pygame.transform.scale(self.background[0], (WIDTH, HEIGHT))
         screen.blit(background, (0, 0))
         self.platforms.draw(screen)
         self.enemies.draw(screen)
-        
+
     def update(self):
         self.platforms.update()
         self.enemies.update()
@@ -44,7 +43,7 @@ class Level():
                 self.shift -= self.possible_left_shift
 
 
-class Level1(Level):   # это незаконченный первый уровень
+class Level1(Level):  # это незаконченный первый уровень
     def __init__(self, player):
         super().__init__(player)
 
@@ -65,7 +64,7 @@ class Level1(Level):   # это незаконченный первый уров
                  ['Grass', '.png', 428, 400],
                  ['Grass', '.png', 640, 450],
                  ['Grass', '.png', 800, 335],
-                 ]    # создаем список платформ ex: [image_name, format_name, x, y]
+                 ]  # создаем список платформ ex: [image_name, format_name, x, y]
 
         self.scroll_limit = 256
 

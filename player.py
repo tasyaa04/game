@@ -44,6 +44,9 @@ class Player(pygame.sprite.Sprite):
         self.in_fall = True
         self.in_air_secs = 0
 
+        self.clock = pygame.time.Clock()
+        self.time = 0
+
     def update(self):
         """Move the player"""
         keys = pygame.key.get_pressed()
@@ -76,7 +79,7 @@ class Player(pygame.sprite.Sprite):
             self.jump()
 
         if self.in_air and self.in_air_secs > 0:
-            self.rect.y -= 30
+            self.rect.y -= 60
             self.in_air_secs -= 1
             self.in_air = False if self.in_air_secs == 0 else self.in_air
 
@@ -89,6 +92,8 @@ class Player(pygame.sprite.Sprite):
 
         self.speed_x = 0
         self.speed_y = 0
+
+        self.time += self.clock.tick()
 
     def update_animation(self, keys):
 
@@ -114,8 +119,10 @@ class Player(pygame.sprite.Sprite):
 
         # changing frame of animation
         try:
-            self.image = self.current_animation[(self.current_animation.index(self.image) + 1) %
-                                                len(self.current_animation)]
+            if self.current_animation in (self.idle_l, self.idle_r):
+                self.image = self.current_animation[(self.time // 90) % len(self.current_animation)]
+            else:
+                self.image = self.current_animation[(self.time // 60) % len(self.current_animation)]
         except ValueError:
             self.image = self.current_animation[0]
 
@@ -127,7 +134,7 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         self.in_air = True
-        self.in_air_secs = 25
+        self.in_air_secs = 6
 
     def shoot(self):
         pass

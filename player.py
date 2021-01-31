@@ -3,6 +3,7 @@
 import pygame
 import os
 from images import get_images
+from random import randint
 
 
 class Player(pygame.sprite.Sprite):
@@ -26,6 +27,12 @@ class Player(pygame.sprite.Sprite):
         self.jump_r = get_images(f'Jump{os.sep}Cuphead{os.sep}cuphead_jump_0001...0008')
         self.jump_l = [pygame.transform.flip(img, True, False) for img in self.jump_r]
 
+        self.jump_sound = pygame.mixer.Sound('sfx/sfx_player_jump_01.wav')
+        self.jump_sound.set_volume(0.1)
+        self.shoot_sound = pygame.mixer.Sound('sfx/sfx_player_default_fire_loop_01.wav')
+        self.shoot_sound.set_volume(0.2)
+        self.shoot_sound_playing = False
+
         # current list of images
         self.current_animation = self.idle_r
 
@@ -46,6 +53,8 @@ class Player(pygame.sprite.Sprite):
 
         self.clock = pygame.time.Clock()
         self.time = 0
+
+        self.bullets = pygame.sprite.Group()
 
     def update(self):
         """Move the player"""
@@ -75,7 +84,14 @@ class Player(pygame.sprite.Sprite):
             self.right_move()
         if keys[pygame.K_SPACE]:
             self.shoot()
+            if not self.shoot_sound_playing:
+                self.shoot_sound.play(-1, maxtime=0)
+                self.shoot_sound_playing = True
+        else:
+            self.shoot_sound.stop()
+            self.shoot_sound_playing = False
         if keys[pygame.K_UP] and self.current_animation not in (self.jump_r, self.jump_l):
+            self.jump_sound.play(0)
             self.jump()
 
         if self.in_air and self.in_air_secs > 0:
@@ -94,6 +110,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_y = 0
 
         self.time += self.clock.tick()
+        self.bullets.update()
 
     def update_animation(self, keys):
 
@@ -137,4 +154,44 @@ class Player(pygame.sprite.Sprite):
         self.in_air_secs = 6
 
     def shoot(self):
-        pass
+        try:
+            last_bullet = self.bullets.sprites()[-1]
+            if ((last_bullet.rect.x > self.rect.x + 400) and (last_bullet.facing == 'r')) or \
+                    ((last_bullet.rect.x < self.rect.x - 400) and (last_bullet.facing == 'l')):
+                Bullet(self, self.bullets)
+        except IndexError:
+            Bullet(self, self.bullets)
+
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, player, *groups):
+        super().__init__(*groups)
+
+        self.clock = pygame.time.Clock()
+        self.time = 0
+
+        self.groups = groups
+        self.facing = player.player_facing
+        self.r_animation = get_images(f'bullet{os.sep}bullet_0001...0008')
+        self.l_animation = [pygame.transform.flip(x, True, False) for x in self.r_animation]
+        self.current_animation = self.r_animation if self.facing == 'r' else self.l_animation
+        self.image = self.current_animation[0]
+        self.rect = self.image.get_rect()
+        self.rect.y = randint(player.rect.y, player.rect.y + 100)
+        self.rect.x = player.rect.x + 75 if self.facing == 'r' else player.rect.left - 75
+        self.rect.width = 150
+        self.rect.height = 50
+
+    def update(self):
+        if self.facing == 'l':
+            self.rect.x -= 50
+        elif self.facing == 'r':
+            self.rect.x += 50
+
+        self.image = self.current_animation[(self.time // 75) % len(self.current_animation)]
+
+        self.time += self.clock.tick()
+        if self.rect.x not in range(0, 1920):
+            for group in self.groups:
+                group.remove(self)
+            del self

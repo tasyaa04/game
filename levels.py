@@ -1,5 +1,3 @@
-import pygame
-from images import *
 from obstacles import *
 from player import *
 
@@ -144,20 +142,20 @@ class Level2(Level):
                  ['Dirt', '.png', 3400, 984],
                  ]  # создаем список платформ ex: [image_name, format_name, x, y]
 
-        self.possible_right_shift = 2000
+        self.possible_right_shift = 1975
 
         environment = [
-            ['Environment\Asset 8', '.png', 135, 580],
-            ['Environment\Asset 1', '.png', 1300, 659],
-            ['Environment\Asset 9', '.png', 1290, 890],
-            ['Environment\Asset 6', '.png', 1350, 885],
-            ['Environment\Asset 13', '.png', 246, 585],
-            ['Environment\Asset 15', '.png', 650, 748],
-            ['Environment\Asset 6', '.png', 900, 540],
-            ['Environment\Asset 2', '.png', 3600, 355],
-            ['Environment\Asset 6', '.png', 3610, 580],
-            ['Environment\Asset 6', '.png', 3000, 780],
-            ['Environment\Asset 11', '.png', 2990, 788],
+            [f'Environment{os.sep}Asset 8', '.png', 135, 580],
+            [f'Environment{os.sep}Asset 1', '.png', 1300, 659],
+            [f'Environment{os.sep}Asset 9', '.png', 1290, 890],
+            [f'Environment{os.sep}Asset 6', '.png', 1350, 885],
+            [f'Environment{os.sep}Asset 13', '.png', 246, 585],
+            [f'Environment{os.sep}Asset 15', '.png', 650, 748],
+            [f'Environment{os.sep}Asset 6', '.png', 900, 540],
+            [f'Environment{os.sep}Asset 2', '.png', 3600, 355],
+            [f'Environment{os.sep}Asset 6', '.png', 3610, 580],
+            [f'Environment{os.sep}Asset 6', '.png', 3000, 780],
+            [f'Environment{os.sep}Asset 11', '.png', 2990, 788],
         ]
 
         for i in level:
@@ -173,7 +171,7 @@ class Level2(Level):
             self.environment.add(sprite)
 
         platform = MovingPlatform('Grass', '.png')
-        platform.set_speed(1, 0)
+        platform.set_speed(10, 0)
         platform.rect.x, platform.rect.y = 1800, 470
         platform.set_borders(1800, 2200, 470, 598)
         platform.level = self

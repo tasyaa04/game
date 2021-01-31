@@ -1,8 +1,9 @@
 """Module used to process the images"""
 
 import os
-import pygame
 import sys
+
+import pygame
 
 
 def load_image(name, colorkey=None):

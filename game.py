@@ -1,9 +1,7 @@
 import pygame
-import os
-import sys
 
+from levels import Level2
 from player import Player
-from level import Level1
 
 
 def main():
@@ -21,7 +19,7 @@ def main():
 
     player = Player()
     active_group.add(player)
-    level = Level1(player)
+    level = Level2(player)
     player.level = level
     running = True
     while running:

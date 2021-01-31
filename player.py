@@ -1,9 +1,11 @@
 """Module used to interact with player"""
 
-import pygame
 import os
-from images import get_images
 from random import randint
+
+import pygame
+
+from images import get_images
 
 
 class Player(pygame.sprite.Sprite):

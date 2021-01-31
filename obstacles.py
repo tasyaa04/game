@@ -1,7 +1,8 @@
 """Module used to create obstacles and platforms"""
 
-from images import get_images
 import pygame
+
+from images import get_images
 
 
 class Platform(pygame.sprite.Sprite):

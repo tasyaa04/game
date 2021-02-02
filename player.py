@@ -1,11 +1,10 @@
 """Module used to interact with player"""
 
-import os
-from random import randint
-
 import pygame
-
+import os
 from images import get_images
+from random import randint
+from levels import HEIGHT
 
 
 class Player(pygame.sprite.Sprite):
@@ -40,6 +39,8 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.current_animation[0]
         self.rect = self.image.get_rect()
+
+        self.running = True
 
         # speed of player
         self.speed_x = 0
@@ -78,7 +79,10 @@ class Player(pygame.sprite.Sprite):
             self.lives -= 1
             # if the lives are less than one, game is over
             if self.lives < 1:
-                running = False
+                self.running = False
+
+        if self.rect.bottom > HEIGHT:
+            self.running = False
 
         if keys[pygame.K_LEFT]:
             self.left_move()

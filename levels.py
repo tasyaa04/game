@@ -1,7 +1,7 @@
 from obstacles import *
 from player import *
 
-WIDTH, HEIGHT = 1920, 1080  # размер экрана можно поменять
+WIDTH, HEIGHT = 1920, 1080 # размер экрана можно поменять
 
 
 class Level:
@@ -89,6 +89,8 @@ class Level1(Level):  # это незаконченный первый уров�
 class Level2(Level):
     def __init__(self, player):
         super().__init__(player)
+
+        self.beginning = [10, 600]
 
         level = [['Grass', '.png', 0, 600],
                  ['Grass', '.png', 128, 600],

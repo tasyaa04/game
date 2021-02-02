@@ -1,7 +1,10 @@
 import pygame
+import os
+import sys
 
-from levels import Level2
 from player import Player
+from levels import Level2
+from game_over import game_over
 
 
 def main():
@@ -26,8 +29,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
         level.update()
         active_group.update()
+
         if player.rect.x >= 960 and level.allow_right:
             shift = player.rect.x - 960
             level.scroll(-shift)
@@ -35,7 +42,17 @@ def main():
         if player.rect.x <= 960 and level.allow_left:
             shift = 960 - player.rect.x
             level.scroll(shift)
-            player.rect.x = 960
+            player.rect.x = 960 
+
+        if not player.running:
+            if not game_over(screen):
+                running = False
+            else:
+                player.running = True
+                shift = -level.shift
+                level.scroll(shift)
+                player.rect.bottom, player.rect.centerx = level.beginning[1], level.beginning[0]
+
         level.draw(screen)
         active_group.draw(screen)
         player.bullets.draw(screen)
